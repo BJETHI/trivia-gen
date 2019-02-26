@@ -1,0 +1,1 @@
+export const questionNotLoadedMessage = 'The Questions were not correctly loaded. Please refresh the App.';
