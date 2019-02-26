@@ -5,15 +5,15 @@ import { questionNotLoadedMessage } from './QuestionWrapper.constants';
 
 import QuizErrorComp from '../QuizErrorComp';
 import QuestionComp from '../QuestionComp';
+import QuizScore from '../QuizScore';
 
 class QuestionWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstQuestion: true,
-            lastQuestion: false,
             currentQuestion: 0,
             maxLengthAllowed: 4,
+            score: 0,
         };
     }
 
@@ -24,57 +24,27 @@ class QuestionWrapper extends Component {
         this.setState({ maxLengthAllowed: maxLength });
     }
 
-    nextQuestion = () => {
-        const { currentQuestion } = this.state;
+    nextQuestion = (scoreInfo) => {
+        const { currentQuestion, score } = this.state;
+        if (scoreInfo) {
+            this.setState({ score: score + 1 });
+        }
         this.setState(
             { currentQuestion: currentQuestion + 1 },
-            this.checkLastQuestion
         );
     };
-
-    prevQuestion = () => {
-        const { currentQuestion } = this.state;
-        this.setState(
-            { currentQuestion: currentQuestion - 1 },
-            this.checkFirstQuestion
-        );
-    };
-
-    checkLastQuestion = () => {
-        const { currentQuestion, maxLengthAllowed } = this.state;
-        this.setState({ firstQuestion: false });
-        if (currentQuestion === maxLengthAllowed) {
-            this.setState({ lastQuestion: true });
-        }
-    }
-
-    checkFirstQuestion = () => {
-        const { currentQuestion } = this.state;
-        this.setState({ lastQuestion: false });
-        if (currentQuestion === 0) {
-            this.setState({ firstQuestion: true });
-        }
-    }
 
     render() {
         const { items, className } = this.props;
         const questions = items && items.results;
-        const { currentQuestion, maxLengthAllowed, firstQuestion, lastQuestion } = this.state;
+        const { currentQuestion, maxLengthAllowed, score } = this.state;
+        const questionCompleted = currentQuestion === maxLengthAllowed + 1;
         return (
             <div className={`${className}`}>
-                {!!questions ? <QuestionComp question={questions[currentQuestion]} /> : <QuizErrorComp errorMessage={questionNotLoadedMessage} />}
-                {!!questions &&
-                    <div className='control-buttons row'>
-                        <div className='col-xs-6 prev-btn-col'>
-                            {<button onClick={this.prevQuestion} className='prev-button' disabled={!!firstQuestion}>Previous</button>}
-                        </div>
-                        <div className='col-xs-6 next-btn-col'>
-                            {<button onClick={this.nextQuestion} className='next-button' disabled={!!lastQuestion}>Next</button>}
-                        </div>
-                        <div className='col-xs-12 submit-btn-col'>
-                            {<button className='submit-button' disabled={!(currentQuestion === maxLengthAllowed)}>Submit</button>}
-                        </div>
-                    </div>}
+                {(!!questions && !questionCompleted) &&
+                    <QuestionComp question={questions[currentQuestion]} nextQuestion={this.nextQuestion} />}
+                {!items && <QuizErrorComp errorMessage={questionNotLoadedMessage} />}
+                {questionCompleted && <div><QuizScore score={score} total={maxLengthAllowed + 1} /></div>}
             </div>
         )
     }

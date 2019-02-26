@@ -2,6 +2,7 @@ import { css } from 'styled-components';
 
 export default css`
 background:#8e8f90;
+padding-bottom: 40px;
 
 .control-buttons{
     padding: 15px;

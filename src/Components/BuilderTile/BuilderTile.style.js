@@ -5,7 +5,7 @@ export default css`
     background: #454545;
     color: #fcf6f0;
     border-radius: 5%;
-    border: 5px solid green;
+    border: 5px solid 	#006400;
     padding: 10px;
 
     &.selected-tile{

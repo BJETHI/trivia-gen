@@ -3,6 +3,11 @@ import styles from './QuestionComp.style';
 import styleWrapper from '../../libs/styleWrapper';
 
 class QuestionComp extends Component {
+    validateOption = (e) => {
+        const { question: { correct_answer }, nextQuestion } = this.props;
+        const isCorrect = e.target.value === correct_answer;
+        nextQuestion(isCorrect);
+    }
     render() {
         const { question: { category, difficulty, question, correct_answer, incorrect_answers }, className } = this.props;
         let optionArray = [...incorrect_answers, correct_answer];
