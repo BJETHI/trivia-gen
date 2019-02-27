@@ -8,7 +8,15 @@ export default css`
     border: 5px solid 	#006400;
     padding: 10px;
 
-    &.selected-tile{
+    &.selected-tile {
         border-color: red;
+        animation-name: selectTile;
+        animation-duration: 1.2s;
+    }
+
+    @keyframes selectTile {
+        0% {transform: scale(1);}
+        25% {transform: scale(1.2);}
+        100% {transform: scale(1);}
     }
 `;
